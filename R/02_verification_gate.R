@@ -2,6 +2,11 @@ library(digest)
 library(openssl)
 library(jsonlite)
 
+# Helper function to convert hex string back to raw bytes
+hex_to_raw <- function(hex_str) {
+  as.raw(as.hexmode(substring(hex_str, seq(1, nchar(hex_str), 2), seq(2, nchar(hex_str), 2))))
+}
+
 # Verification gate: halts pipeline execution if data is tampered/corrupted
 verify_data_integrity <- function(data_path, manifest_path, public_key) {
   manifest <- read_json(manifest_path)
@@ -15,7 +20,7 @@ verify_data_integrity <- function(data_path, manifest_path, public_key) {
   }
   
   # 2. Verify ECDSA signature
-  sig_raw <- parse_hex(manifest$signature_ecdsa)
+  sig_raw <- hex_to_raw(manifest$signature_ecdsa)
   is_valid <- openssl::signature_verify(charToRaw(current_hash), sig_raw, pubkey = public_key)
   
   if (!is_valid) {

@@ -3,7 +3,7 @@ library(openssl)
 library(jsonlite)
 
 generate_keypair <- function() {
-  key <- openssl::ec_keygen(type = "ec", curve = "P-256")
+  key <- openssl::ec_keygen(curve = "P-256")
   pubkey <- as.list(key)$pubkey
   list(private = key, public = pubkey)
 }
