@@ -50,3 +50,25 @@ This repository implements a **two-tier architecture**:
 │                             │
 ▼                             ▼
 [ SARIMAX (xreg) ]             [ Prophet GAM ]
+
+
+---
+
+## 📁 Repository Structure
+
+```text
+├── data/
+│   ├── raw/                   # Raw CSV price series and exogenous logs
+│   ├── verified/              # Cryptographically verified clean datasets
+│   └── manifests/             # Canonical JSON manifests with ECDSA signatures
+├── R/
+│   ├── 01_manifest_gen.R      # Algorithm A: SHA-256 hashing & signature gen
+│   ├── 02_verification_gate.R # Algorithm B: Pre-ingestion validation gate
+│   ├── 03_sarimax_models.R    # SARIMAX univariate and exogenous pipelines
+│   └── 04_prophet_models.R    # Prophet GAM fitting & prior scale tuning
+├── tests/
+│   └── test_security.R        # Adversarial attack tests (mutation, spoofing)
+├── config.yml                 # Key paths and model parameters
+├── run_pipeline.R             # Main execution controller script
+├── README.md                  # Project documentation
+└── LICENSE                    # MIT License
