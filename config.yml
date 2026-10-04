@@ -1,0 +1,10 @@
+default:
+  paths:
+    raw_data: "data/raw/ncr_red_onions_weekly.csv"
+    manifest_output: "data/manifests/ncr_red_onions_manifest.json"
+    verified_data: "data/verified/ncr_red_onions_verified.csv"
+  model:
+    target_variable: "price_php_kg"
+    exogenous_vars: ["diesel_index", "typhoon_impact_index"]
+    forecast_horizon: 4
+    seasonal_frequency: 52
