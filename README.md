@@ -31,3 +31,22 @@ This repository implements a **two-tier architecture**:
 ---
 
 ## 🏗️ System Architecture
+
+[ Raw CSV Price Data ] + [ Exogenous Variables (Fuel & Typhoons) ]
+│
+▼
+[ Algorithm A: Cryptographic Manifest Generator ]
+(SHA-256 Hashing + ECDSA P-256 Signing)
+│
+▼
+[ Algorithm B: Automated Pre-Ingestion Gate ]
+│
+┌──────────────────┴──────────────────┐
+│                                     │
+[ REJECT / HALT ]                     [ PASS / VERIFIED ]
+(Tampered / Impersonated)                       │
+▼
+┌──────────────┴──────────────┐
+│                             │
+▼                             ▼
+[ SARIMAX (xreg) ]             [ Prophet GAM ]
