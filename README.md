@@ -1,54 +1,35 @@
-# Tamper-Evident Agricultural Price Forecasting & Provenance Pipeline
+# Cryptographically Verified Agricultural Price Forecasting
 
-An end-to-end R pipeline that combines cryptographic data provenance (SHA-256 integrity verification and ECDSA digital signatures) with time-series forecasting models (SARIMAX and Prophet) for agricultural commodities.
+A robust time-series forecasting pipeline for Pampanga retail prices (SARIMAX & Prophet) backed by SHA-256 integrity hashing and ECDSA P-256 digital signature manifests.
 
-## System Architecture
+## Pipeline Architecture
+1. **Cryptographic Ingestion (`01_ingest_and_sign.R`):** Hashes datasets with SHA-256 and signs `signed_manifest.json` using ECDSA P-256.
+2. **Verification (`02_verify_pipeline.R`):** Validates digital signatures to prevent data tampering.
+3. **Data Alignment (`03_data_alignment.R`):** Aligns monthly target prices with weekly fuel/weather regressors using non-leaking lag operations.
+4. **Forecasting (`04_forecasting.R`):** Evaluates SARIMAX and Prophet against baseline persistence models.
 
-+---------------------------+
-|  Raw Agricultural Data    |
-| (ncr_red_onions_weekly)   |
-+-------------+-------------+
-|
-v
-+---------------------------+
-|   01_manifest_gen.R       | ---> Generates SHA-256 Hash +
-| (Cryptographic Signing)   |      ECDSA (P-256) Digital Signature
-+-------------+-------------+
-|
-v
-+---------------------------+
-|   02_verification_gate.R  | ---> Halts pipeline ([SECURITY HALT])
-|   (Provenance Check)      |      if payload or signature is tampered
-+-------------+-------------+
-|
-v [PASS / VERIFIED]
-+---------------------------+
-| 03_sarimax & 04_prophet   | ---> Executes price forecasting with
-|   (Forecasting Engine)    |      exogenous macroeconomic variables
-+---------------------------+
-
-
-## How to Run
-
-### Execute the Pipeline
+## Usage
 ```R
-source("run_pipeline.R")
-Run Security Tests
-R
-testthat::test_dir("tests")
-Project Structure
-R/01_manifest_gen.R: Manifest creation and ECDSA keypair generation.
+source("01_ingest_and_sign.R")
+source("02_verify_pipeline.R")
+source("03_data_alignment.R")
+source("04_forecasting.R")
 
-R/02_verification_gate.R: SHA-256 hash matching and ECDSA signature verification.
+---
 
-R/03_sarimax_models.R: SARIMAX time-series model fitting.
+### Step 4: Commit and Push to GitHub
 
-R/04_prophet_models.R: Prophet forecasting implementation.
+Run the following commands in the RStudio **Terminal**:
 
-data/raw/: Raw CSV agricultural price datasets.
+```bash
+# 1. Stage all files
+git add .
 
-data/manifests/: Cryptographic JSON manifests.
+# 2. Commit the changes
+git commit -m "Feat: Complete cryptographically signed agricultural forecasting pipeline"
 
-tests/test_security.R: Security halt verification unit test.
+# 3. Connect to your remote repository
+git remote add origin https://github.com/reyesrouen/agri-price-forecasting-provenance.git
 
-run_pipeline.R: Master orchestrator script.
+# 4. Push your code to main
+git push -u origin main
